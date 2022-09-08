@@ -4,6 +4,8 @@ import { useState } from "react";
 import AddTask from "./components/AddTask";
 
 function App() {
+  const [showAdd, setShowAdd] = useState(false);
+
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -25,6 +27,16 @@ function App() {
     },
   ]);
 
+  const addTask = (task) => {
+    // console.log("task: ", task);
+    const id = tasks[tasks.length - 1].id + 1;
+    // console.log("id: ", id);
+    const newTask = { id, ...task };
+    // console.log("new task: ", newTask);
+    setTasks([...tasks, newTask]);
+    // console.log("tasks: ", tasks);
+  };
+
   const deleteTask = (id) => {
     setTasks(tasks.filter((task) => task.id !== id));
   };
@@ -39,8 +51,12 @@ function App() {
 
   return (
     <div className="container">
-      <Header title="Task Tracker" />
-      <AddTask />
+      <Header
+        title="Task Tracker"
+        onAdd={() => setShowAdd(!showAdd)}
+        showAddTask={showAdd}
+      />
+      {showAdd && <AddTask onAdd={addTask} />}
       {tasks.length > 0 ? (
         <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} />
       ) : (
